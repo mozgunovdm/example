@@ -59,7 +59,7 @@ func (repo *repository) CreateOrder(ctx context.Context, employe employe.Employe
 func (repo *repository) GetEmployeByID(ctx context.Context, id string) (employe.Employe, error) {
 	var employeById = employe.Employe{}
 	if err := repo.db.QueryRowContext(ctx,
-		"SELECT id, name, job, employed_at FROM employe WHERE id = $1",
+		"SELECT id, name, job, employed_at FROM employe WHERE (id = $1)",
 		id).
 		Scan(
 			&employeById.ID, &employeById.Name, &employeById.Job, &employeById.EmployedAt,
@@ -67,8 +67,35 @@ func (repo *repository) GetEmployeByID(ctx context.Context, id string) (employe.
 		level.Error(repo.logger).Log("err", err.Error())
 		return employeById, err
 	}
-	// ToDo: Query employe for head
+	if err := repo.getEmployesByID(ctx, &employeById); err != nil {
+		level.Error(repo.logger).Log("err", err.Error())
+		return employeById, err
+	}
 	return employeById, nil
+}
+
+func (repo *repository) getEmployesByID(ctx context.Context, head *employe.Employe) error {
+	rows, err := repo.db.QueryContext(ctx,
+		"SELECT id, name, job, employed_at FROM employe WHERE (head_id = $1)",
+		head.ID)
+	if err != nil {
+		level.Error(repo.logger).Log("err", err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var employeById = employe.Employe{}
+		if err := rows.Scan(&employeById.ID, &employeById.Name, &employeById.Job, &employeById.EmployedAt); err != nil {
+			level.Error(repo.logger).Log("err", err.Error())
+			return err
+		}
+		if err := repo.getEmployesByID(ctx, &employeById); err != nil {
+			level.Error(repo.logger).Log("err", err.Error())
+			return err
+		}
+		head.Employes = append(head.Employes, employeById)
+	}
+	return nil
 }
 
 // Close implements DB.Close
