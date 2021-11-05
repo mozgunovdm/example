@@ -18,40 +18,6 @@ var (
 	ErrBadRouting = errors.New("bad routing")
 )
 
-// // NewService wires Go kit endpoints to the HTTP transport.
-// func NewService(
-// 	svcEndpoints transport.Endpoints, options []kithttp.ServerOption, logger log.Logger,
-// ) http.Handler {
-// 	// set-up router and initialize http endpoints
-// 	var (
-// 		r            = mux.NewRouter()
-// 		errorLogger  = kithttp.ServerErrorLogger(logger)
-// 		errorEncoder = kithttp.ServerErrorEncoder(encodeErrorResponse)
-// 	)
-// 	options = append(options, errorLogger, errorEncoder)
-// 	//options := []kithttp.ServerOption{
-// 	//	kithttp.ServerErrorLogger(logger),
-// 	//	kithttp.ServerErrorEncoder(encodeError),
-// 	//}
-// 	// HTTP Post - /orders
-// 	r.Methods("POST").Path("/employes").Handler(kithttp.NewServer(
-// 		svcEndpoints.Create,
-// 		decodeCreateRequest,
-// 		encodeResponse,
-// 		options...,
-// 	))
-
-// 	// HTTP Post - /orders/{id}
-// 	r.Methods("GET").Path("/employes/{id}").Handler(kithttp.NewServer(
-// 		svcEndpoints.GetByID,
-// 		decodeGetByIDRequest,
-// 		encodeResponse,
-// 		options...,
-// 	))
-
-// 	return r
-// }
-
 func NewService(
 	svcEndpoints transport.Endpoints, logger log.Logger,
 ) http.Handler {
@@ -61,7 +27,7 @@ func NewService(
 		kithttp.ServerErrorLogger(logger),
 		kithttp.ServerErrorEncoder(encodeErrorResponse),
 	}
-	// HTTP Post - /orders
+	// HTTP Post - /employes
 	r.Methods("POST").Path("/employes").Handler(kithttp.NewServer(
 		svcEndpoints.Create,
 		decodeCreateRequest,
@@ -69,7 +35,7 @@ func NewService(
 		options...,
 	))
 
-	// HTTP Post - /orders/{id}
+	// HTTP Post - /employes/{id}
 	r.Methods("GET").Path("/employes/{id}").Handler(kithttp.NewServer(
 		svcEndpoints.GetByID,
 		decodeGetByIDRequest,
@@ -77,13 +43,13 @@ func NewService(
 		options...,
 	))
 
+	// HTTP Post - /status
 	r.Methods("GET").Path("/status").Handler(kithttp.NewServer(
 		svcEndpoints.Status,
 		decodeStatusRequest,
 		encodeResponse,
 		options...,
 	))
-
 	return r
 }
 
@@ -111,23 +77,21 @@ func decodeStatusRequest(
 	return transport.StatusRequest{}, nil
 }
 
-// func encodeResponse(
-// 	_ context.Context,
-// 	w http.ResponseWriter,
-// 	response interface{},
-// ) error {
-// 	return json.NewEncoder(w).Encode(response)
-// }
-
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	if e, ok := response.(errorer); ok && e.error() != nil {
-		// Not a Go kit transport error, but a business-logic error.
-		// Provide those as HTTP errors.
 		encodeErrorResponse(ctx, e.error(), w)
 		return nil
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	return json.NewEncoder(w).Encode(response)
+
+	resp, err := json.MarshalIndent(&response, "", "\t")
+	if err != nil {
+		return err
+	}
+	w.Write(resp)
+	w.Write([]byte("\n"))
+	return nil
+	//return json.NewEncoder(w).Encode(response)
 }
 
 type errorer interface {

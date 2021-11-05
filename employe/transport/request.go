@@ -6,7 +6,7 @@ import (
 
 // CreateRequest holds the request parameters for the Create method.
 type CreateRequest struct {
-	Employe employe.Employe
+	Employe employe.EmployeDB
 }
 
 // CreateResponse holds the response values for the Create method.

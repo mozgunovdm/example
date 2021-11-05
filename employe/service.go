@@ -13,8 +13,7 @@ var (
 
 // Service describes the Employe service.
 type Service interface {
-	Create(ctx context.Context, employe Employe) (string, error)
+	Create(ctx context.Context, employe EmployeDB) (string, error)
 	GetByID(ctx context.Context, id string) (Employe, error)
-
 	Status(ctx context.Context) (string, error)
 }

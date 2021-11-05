@@ -24,7 +24,7 @@ func TestCreateEmploye(t *testing.T) {
 	{
 		var err error
 		db, err = sql.Open("postgres",
-			"postgres://postgres:060701@localhost:5432/employedb?sslmode=disable")
+			"postgres://testuser:12345678@localhost:5433/test_db?sslmode=disable")
 		if err != nil {
 			t.Fatalf("Db no connection " + err.Error())
 		}
@@ -36,8 +36,7 @@ func TestCreateEmploye(t *testing.T) {
 		t.Fatalf("Could not create repository")
 	}
 
-	emp := employe.Employe{
-		ID:         "1",
+	emp := employe.EmployeDB{
 		Name:       "testName",
 		Job:        "testJob",
 		EmployedAt: "0000-00-00",
@@ -67,7 +66,7 @@ func TestGetEmployeByID(t *testing.T) {
 	{
 		var err error
 		db, err = sql.Open("postgres",
-			"postgres://postgres:060701@localhost:5432/employedb?sslmode=disable")
+			"postgres://testuser:12345678@localhost:5433/test_db?sslmode=disable")
 		if err != nil {
 			t.Fatalf("Db no connection")
 		}

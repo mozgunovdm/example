@@ -51,19 +51,3 @@ func makeStatusEndpoints(s employe.Service) endpoint.Endpoint {
 		return StatusResponse{res}, nil
 	}
 }
-
-// func (e Endpoints) Status(ctx context.Context) (string, error) {
-// 	req := statusRequest{}
-
-// 	resp, err := e.StatusEndpoint(ctx, req)
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	statusResp, ok := resp.(statusResponse)
-// 	if !ok {
-// 		return "", errUnexpected
-// 	}
-
-// 	return statusResp.Status, nil
-// }

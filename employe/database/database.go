@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/mozgunovdm/example/employe"
 )
 
@@ -28,34 +28,30 @@ func New(db *sql.DB, logger log.Logger) (employe.Repository, error) {
 	}, nil
 }
 
-// CreateOrder inserts a new order and its order items into db
-func (repo *repository) CreateOrder(ctx context.Context, employe employe.Employe) error {
+func (repo *repository) CreateEmploye(ctx context.Context, employe employe.EmployeDB) (string, error) {
 
-	repo.logger.Log("function", "Called CreateOrder")
-	// // Run a transaction to sync the query model.
-	// err := crdb.ExecuteTx(ctx, repo.db, nil, func(tx *sql.Tx) error {
-	// 	return createOrder(tx, employe)
-	// })
-	// if err != nil {
-	// 	return err
-	// }
-	return nil
+	//  Insert Employe into the "employe" table.
+
+	var id, sql string
+	var err error
+	if employe.HeadID == "" {
+		sql = `SELECT "p_employe_add" ($1,$2,$3)`
+		err = repo.db.QueryRowContext(ctx, sql, employe.Name, employe.Job, employe.EmployedAt).
+			Scan(&id)
+	} else {
+		sql = `SELECT "p_employe_add" ($1,$2,$3,$4)`
+		err = repo.db.QueryRowContext(ctx, sql, employe.Name, employe.Job, employe.EmployedAt, employe.HeadID).
+			Scan(&id)
+	}
+
+	if err != nil {
+		level.Error(repo.logger).Log("err", err.Error())
+		return "0", err
+	}
+	return id, nil
 }
 
-// func createEmploye(tx *sql.Tx, employe employe.Employe) error {
-
-// 	// Insert employe into the "employe" table.
-// 	sql := `
-// 			INSERT INTO employe (name, job, employed_at)
-// 			VALUES ($1,$2,$3,$4,$5)`
-// 	_, err := tx.Exec(sql, employe.Name, employe.Job, employe.EmployedAt)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
-
-// GetOrderByID query the order by given id
+// GetEmployeByID query the employe by given id
 func (repo *repository) GetEmployeByID(ctx context.Context, id string) (employe.Employe, error) {
 	var employeById = employe.Employe{}
 	if err := repo.db.QueryRowContext(ctx,

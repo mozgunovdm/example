@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
-	"github.com/gofrs/uuid"
+
 	"github.com/rickb777/date"
 
 	employeService "github.com/mozgunovdm/example/employe"
@@ -27,16 +27,18 @@ func NewService(rep employeService.Repository, logger log.Logger) employeService
 }
 
 // Create employe
-func (s *service) Create(ctx context.Context, employe employeService.Employe) (string, error) {
+func (s *service) Create(ctx context.Context, employe employeService.EmployeDB) (string, error) {
 	logger := log.With(s.logger, "method", "Create")
 	level.Info(logger).Log("Create", 1)
-	uuid, _ := uuid.NewV4()
-	id := uuid.String()
-	employe.ID = id
-	employe.Name = "Employe"
-	employe.Job = "Robot"
-	employe.EmployedAt = date.Today().FormatISO(4)
-
+	employe.EmployedAt = date.Today().String()
+	id, err := s.repository.CreateEmploye(ctx, employe)
+	if err != nil {
+		level.Error(logger).Log("err", err)
+		if err == sql.ErrNoRows {
+			return id, employeService.ErrEmployeNotFound
+		}
+		return id, employeService.ErrQueryRepository
+	}
 	return id, nil
 }
 
