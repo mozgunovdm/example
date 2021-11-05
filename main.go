@@ -51,7 +51,7 @@ func main() {
 		var err error
 		// Connect to the "ordersdb" database
 		db, err = sql.Open("postgres",
-			"postgres://postgres:060701@localhost:5432/employedb?sslmode=disable")
+			"postgres://testuser:12345678@localhost:5433/test_db?sslmode=disable")
 		if err != nil {
 			level.Error(logger).Log("exit", err)
 			os.Exit(-1)
