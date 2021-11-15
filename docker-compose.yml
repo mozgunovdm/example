@@ -4,11 +4,12 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_DB: test_db
-      POSTGRES_USER: testuser
+      POSTGRES_DB: employedb
+      POSTGRES_USER: user
+      POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_PASSWORD: 12345678
     volumes:
-      - ./InitDatabase:/docker-entrypoint-initdb.d
+      - ./forDocker:/docker-entrypoint-initdb.d
     ports:
       - "5433:5432"
       
