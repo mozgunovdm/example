@@ -27,7 +27,7 @@ func makeCreateEndpoint(s employe.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(CreateRequest) // type assertion
 		id, err := s.Create(ctx, req.Employe)
-		return CreateResponse{ID: id, Err: err}, nil
+		return CreateResponse{ID: id, Err: err}, err
 	}
 }
 
@@ -35,7 +35,7 @@ func makeGetByIDEndpoint(s employe.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(GetByIDRequest)
 		employeRes, err := s.GetByID(ctx, req.ID)
-		return GetByIDResponse{Employe: employeRes, Err: err}, nil
+		return GetByIDResponse{Employe: employeRes, Err: err}, err
 	}
 }
 
@@ -45,9 +45,6 @@ func makeStatusEndpoints(s employe.Service) endpoint.Endpoint {
 		request interface{},
 	) (interface{}, error) {
 		res, err := s.Status(ctx)
-		if err != nil {
-			return StatusResponse{res}, err
-		}
-		return StatusResponse{res}, nil
+		return StatusResponse{res}, err
 	}
 }

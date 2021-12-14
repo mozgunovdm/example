@@ -12,4 +12,10 @@ services:
       - ./forDocker:/docker-entrypoint-initdb.d
     ports:
       - "5433:5432"
-      
+  example:
+    image: example-image
+    #network_mode: host
+    ports: 
+      - "8888:8888"
+    depends_on:
+      - postgres    

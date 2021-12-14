@@ -40,7 +40,18 @@ func New(db *sql.DB, l log.Logger) (employe.Repository, error) {
 func (repo *repository) CreateEmploye(ctx context.Context, emp employe.EmployeDB) (string, error) {
 
 	//  Insert Employe into the "employe" table.
-	id := "0"
+	id := "nil"
+
+	//Check head id exist
+	if len(strings.TrimSpace(emp.HeadID)) > 0 {
+		sql := `SELECT id FROM employe WHERE (id = $1)`
+		err := repo.db.QueryRowContext(ctx, sql, emp.HeadID).Scan(&id)
+		if err != nil {
+			level.Error(repo.logger).Log("err", err.Error())
+			return id, err
+		}
+		//level.Error(repo.logger).Log("id", id, "err", err.Error())
+	}
 
 	// Insert new Employe
 	sql := `INSERT INTO employe (name, job, employed_at) values ($1,$2,$3) returning id`
@@ -50,7 +61,7 @@ func (repo *repository) CreateEmploye(ctx context.Context, emp employe.EmployeDB
 		return id, err
 	}
 
-	//Insert head of employe
+	//Insert head of employe if needed
 	if len(strings.TrimSpace(emp.HeadID)) > 0 {
 		sql := `INSERT INTO relation_employes (stuff_id, head_id) values ($1, $2)`
 		err := repo.db.QueryRowContext(ctx, sql, id, emp.HeadID).Err()

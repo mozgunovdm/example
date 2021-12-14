@@ -1,9 +1,12 @@
 package main
 
 import (
-	cmdmain "github.com/mozgunovdm/example/internal/pkg/cmdmain"
+	"fmt"
+
+	cmdmain "github.com/mozgunovdm/example/pkg/cmdmain"
 )
 
 func main() {
+	fmt.Println("Version 0.0.0")
 	cmdmain.Main()
 }

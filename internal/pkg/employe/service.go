@@ -6,11 +6,12 @@ import (
 )
 
 var (
-	ErrEmployeNameNotSet = errors.New("employe name not set")
-	ErrEmployeJobNotSet  = errors.New("employe job not set")
-	ErrEmployeNotFound   = errors.New("employe not found")
-	ErrCmdRepository     = errors.New("unable to command repository")
-	ErrQueryRepository   = errors.New("unable to query repository")
+	ErrEmployeNameNotSet  = errors.New("employe name not set")
+	ErrEmployeJobNotSet   = errors.New("employe job not set")
+	ErrEmployeNotFound    = errors.New("employe not found")
+	ErrRalationNotCreated = errors.New("could not create ralation employe")
+	ErrCmdRepository      = errors.New("unable to command repository")
+	ErrQueryRepository    = errors.New("unable to query repository")
 )
 
 // Service describes the Employe service.

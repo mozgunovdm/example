@@ -6,8 +6,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
+	"github.com/go-kit/log"
 	"github.com/gorilla/mux"
 
 	"github.com/mozgunovdm/example/internal/pkg/employe"
@@ -19,15 +19,20 @@ var (
 )
 
 func NewService(
-	svcEndpoints transport.Endpoints, logger log.Logger,
+	svcEndpoints transport.Endpoints, options []kithttp.ServerOption, logger log.Logger,
 ) http.Handler {
 	// set-up router and initialize http endpoints
-	r := mux.NewRouter()
-	options := []kithttp.ServerOption{
-		kithttp.ServerErrorLogger(logger),
-		kithttp.ServerErrorEncoder(encodeErrorResponse),
-	}
-	// HTTP Post - /employes
+	var (
+		r            = mux.NewRouter()
+		errorLogger  = kithttp.ServerErrorLogger(logger)
+		errorEncoder = kithttp.ServerErrorEncoder(encodeErrorResponse)
+	)
+	options = append(options, errorLogger, errorEncoder)
+	//options := []kithttp.ServerOption{
+	//	kithttp.ServerErrorLogger(logger),
+	//	kithttp.ServerErrorEncoder(encodeError),
+	//}
+	// HTTP Post - /orders
 	r.Methods("POST").Path("/employes").Handler(kithttp.NewServer(
 		svcEndpoints.Create,
 		decodeCreateRequest,
@@ -78,7 +83,8 @@ func decodeStatusRequest(
 }
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	if e, ok := response.(errorer); ok && e.error() != nil {
+	e, ok := response.(errorer)
+	if ok && e.error() != nil {
 		encodeErrorResponse(ctx, e.error(), w)
 		return nil
 	}

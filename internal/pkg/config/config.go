@@ -39,7 +39,7 @@ func NewConfig() *Config {
 		},
 		HTTPServer: HTTPServerConfig{
 			Host: getEnv("HTTP_HOST", ""),
-			Port: getEnv("HTTP_PORT", ""),
+			Port: getEnv("HTTP_PORT", "8888"),
 		},
 		DebugMode: getEnvAsBool("DEBUG_MODE", true),
 	}

@@ -10,4 +10,6 @@ require (
 	github.com/lib/pq v1.10.3
 	github.com/rickb777/date v1.16.1
 	github.com/rickb777/plural v1.4.1 // indirect
+	go.opencensus.io v0.23.0
+	golang.org/x/net v0.0.0-20211118161319-6a13c67c3ce4 // indirect
 )
