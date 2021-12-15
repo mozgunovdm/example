@@ -71,7 +71,7 @@ func Main() {
 
 	if err := godotenv.Load(); err != nil {
 		level.Error(logger).Log("No .env files", err)
-		return
+		panic("No .env files")
 	}
 	cnf := config.NewConfig()
 

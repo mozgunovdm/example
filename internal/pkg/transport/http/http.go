@@ -28,10 +28,7 @@ func NewService(
 		errorEncoder = kithttp.ServerErrorEncoder(encodeErrorResponse)
 	)
 	options = append(options, errorLogger, errorEncoder)
-	//options := []kithttp.ServerOption{
-	//	kithttp.ServerErrorLogger(logger),
-	//	kithttp.ServerErrorEncoder(encodeError),
-	//}
+
 	// HTTP Post - /orders
 	r.Methods("POST").Path("/employes").Handler(kithttp.NewServer(
 		svcEndpoints.Create,

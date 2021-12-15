@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  postgres:
+  postgresdb:
     image: postgres
     restart: always
     environment:
@@ -13,9 +13,10 @@ services:
     ports:
       - "5433:5432"
   example:
-    image: example-image
-    #network_mode: host
+    build: /
+    environment:
+      HOST_CONT_DB: postgresdb
     ports: 
       - "8888:8888"
     depends_on:
-      - postgres    
+      - postgresdb    
