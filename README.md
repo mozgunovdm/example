@@ -11,7 +11,7 @@
 
 #все примеры запросов через curl даны для windows
 По запросу status в API выводится ответ о состоянии работы 
-#curl -i -X GET http://localhost:8080/status
+#curl -i -X GET http://localhost:8888/status
 #result {"status":"ok"}
 
 По запросу employes/{id} в API с указанием id сотрудника будет выводиться ответ
@@ -29,10 +29,10 @@
 
 По запросу employes в API с указанием данных сотрудника, добавляется запись в базу данных. В ответ получаем id нового сотрудника:
 #пример сотрудника без руководителя
-#curl --header "Content-Type: application/json" --request POST --data "{\"name\":\"Poll\", \"job\":\"xyz\", \"employed_at\":\"2021-11-11\"}" http://localhost:8080/employes 
+#curl --header "Content-Type: application/json" --request POST --data "{\"name\":\"Poll\", \"job\":\"xyz\", \"employed_at\":\"2021-11-11\"}" http://localhost:8888/employes 
 #ответ {"id":"1"}
 
 Если неободимо задать руководителя сотруднику, то добовляем поле head_id:
-#curl --header "Content-Type: application/json" --request POST --data "{\"name\":\"Bill\", \"job\":\"robot\", \"employed_at\":\"2021-11-12\", \"head_id\":\"1\"}" http://localhost:8080/employes
+#curl --header "Content-Type: application/json" --request POST --data "{\"name\":\"Bill\", \"job\":\"robot\", \"employed_at\":\"2021-11-12\", \"head_id\":\"1\"}" http://localhost:8888/employes
 
 
