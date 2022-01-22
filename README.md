@@ -68,6 +68,7 @@ curl --header "Content-Type: application/json" --request POST --data "{\"name\":
 
 Пример добавления сотрудника с руководителем:
 
+
 ```
 curl --header "Content-Type: application/json" --request POST --data "{\"name\":\"Bill\", \"job\":\"robot\", \"employed_at\":\"2021-11-12\", \"head_id\":\"1\"}" http://localhost:8888/employes
 ```
